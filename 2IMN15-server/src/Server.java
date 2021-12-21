@@ -1,6 +1,5 @@
-import org.eclipse.leshan.server.californium.LeshanServerBuilder;
 import org.eclipse.leshan.server.californium.LeshanServer;
-
+import org.eclipse.leshan.server.californium.LeshanServerBuilder;
 
 public class Server {
 
