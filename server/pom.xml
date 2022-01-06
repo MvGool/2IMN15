@@ -11,10 +11,40 @@
   		<version>2.0.0-M5</version>
   	</dependency>
 	<dependency>
+		<groupId>org.eclipse.leshan</groupId>
+		<artifactId>leshan-server-demo</artifactId>
+		<version>2.0.0-M5</version>
+	</dependency>
+	<dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-simple</artifactId>
         <version>1.7.30</version>
         <scope>runtime</scope>
     </dependency>
+    <dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-webapp</artifactId>
+		<version>11.0.7</version>
+	</dependency>
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-servlets</artifactId>
+		<version>11.0.7</version>
+	</dependency>
+	<dependency>
+		<groupId>info.picocli</groupId>
+		<artifactId>picocli</artifactId>
+		<version>4.6.2</version>
+	</dependency>
+	<dependency>
+		<groupId>redis.clients</groupId>
+		<artifactId>jedis</artifactId>
+		<version>4.0.1</version>
+	</dependency>
+	<dependency>
+		<groupId>javax.jmdns</groupId>
+		<artifactId>jmdns</artifactId>
+		<version>3.4.1</version>
+	</dependency>
   </dependencies>
 </project>
