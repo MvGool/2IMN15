@@ -1,57 +1,70 @@
-# webapp
+# Getting Started with Create React App
 
-The **leshan-server-demo** webapp is based on [Vue.js](https://vuejs.org/).  
-To be able to enjoy the "single file component" feature we need to use a modern module build system for JavaScript.  
-Here we are using [Yarn](https://yarnpkg.com/) and [Babel](https://babeljs.io/) tooling. 
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-The JavaScript build is integrated in Maven thanks to [frontend-maven-plugin](https://github.com/eirslett/frontend-maven-plugin) and so there is nothing special to do at build time. The classic `mvn clean install` works.
+## Available Scripts
 
-But for the **development workflow this is a bit more complicated.**
+In the project directory, you can run:
 
-## Development workflow
+### `npm start`
 
-### Tooling & IDE
-You will **need to** install **[Yarn](https://yarnpkg.com)** to have a good development experience. (/!\ in Debian there is [binary name issue](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=940511#34).)  
-Without it, the alternative would be to Maven build each time you want to test your code which is a very bad idea...
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-About IDE, Even if you should be able to use your preferred Java IDE, actually Leshan is mainly developed with Eclipse IDE.
-Unfortunately there isn't good open-source plug-in to code with Vue.js in Eclipse. ([The best hope is sticked in License issue](https://github.com/eclipse/wildwebdeveloper/issues/83))  
-So we advice to use [vscodium](https://vscodium.com/) which has a good Vue.js support.
- 
-At browser side, you can **eventually** use [vue-devtools plug-in](https://github.com/vuejs/vue-devtools).
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-### Workflow development 
-Before to be able to develop you need to install all webapp's dependencies :
- 
-```
-yarn install
-```
-Now you need to launch the `LeshanServerDemo` application with your java IDE.
-Then launch :
+### `npm test`
 
-```
-yarn serve
-```
-This will start a dev server (based on webpack-dev-server ) that comes with Hot-Module-Replacement (HMR) working out of the box. Meaning now each time you modify a fronted webapp file, the modification will be automatically applied. So just edit your files and see the changes in your browser.  
-_Note that :_ webapp is available on a different pot 8088 instead of default 8080. (see vue.config.js)
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-## To go further
+### `npm run build`
 
-### Compiles and minifies for production
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-This doesn't make to much sense to do that as this is done automatically by Maven build but you can eventually build the frontend webapp only like this :  
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-```
-yarn build
-```
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### Lints and fixes files
+### `npm run eject`
 
-This is generally automatically do by your IDE (like Vscodium) but you can launch it manually like this : 
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-```
-yarn lint
-```
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

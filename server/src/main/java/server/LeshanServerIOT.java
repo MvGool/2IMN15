@@ -164,7 +164,7 @@ public class LeshanServerIOT {
 		
 		// Define model provider
 		List<ObjectModel> models = ObjectLoader.loadAllDefault();
-		models.addAll(ObjectLoader.loadDdfResources("/models/", ServerConstants.modelPaths)); //TODO
+		models.addAll(ObjectLoader.loadDdfResources("/models/", ServerConstants.modelPaths));
 		if (cli.main.modelsFolder != null) {
 			models.addAll(ObjectLoader.loadObjectsFromDir(cli.main.modelsFolder, true));
 		}
