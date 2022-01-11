@@ -206,7 +206,7 @@ public class LeshanServerIOT {
 		EventServlet eventServlet = new EventServlet(lwServer, lwServer.getSecuredAddress().getPort());
 		ServletHolder eventServletHolder = new ServletHolder(eventServlet);
 		root.addServlet(eventServletHolder, "/api/event/*");
-		ServletHolder clientServletHolder = new ServletHolder(new ClientServlet(lwServer));
+		/*ServletHolder clientServletHolder = new ServletHolder(new ClientServlet(lwServer));
 		root.addServlet(clientServletHolder, "/api/clients/*");
 		ServletHolder securityServletHolder;
 		if (cli.identity.isRPK()) {
@@ -226,7 +226,7 @@ public class LeshanServerIOT {
 		root.addServlet(serverServletHolder, "/api/server/*");
 		ServletHolder objectSpecServletHolder = new ServletHolder(
 				new ObjectSpecServlet(lwServer.getModelProvider(), lwServer.getRegistrationService()));
-		root.addServlet(objectSpecServletHolder, "/api/objectspecs/*");
+		root.addServlet(objectSpecServletHolder, "/api/objectspecs/*");*/
 		return server;
 	}
 		
