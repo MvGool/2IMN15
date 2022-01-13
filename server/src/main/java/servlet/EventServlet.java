@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*******servlet******************************************************************
  * Copyright (c) 2013-2015 Sierra Wireless and others.
  * 
@@ -15,6 +16,8 @@
  *     Michał Wadowski (Orange) - Add Observe-Composite feature.
  *     Orange - keep one JSON dependency
  *******************************************************************************/
+=======
+>>>>>>> 55bcd132890d4b19076b22e0fba87fb1d23a769c
 package servlet;
 
 import java.io.IOException;
