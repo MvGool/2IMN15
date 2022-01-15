@@ -33,4 +33,9 @@ export default class api {
     getReservations() {
         return this.parkingLot.filter(x => x === "reserved").length
     }
+
+    reservePlate(plate) {
+        console.log(plate)
+        // TODO post plate to server
+    }
 }

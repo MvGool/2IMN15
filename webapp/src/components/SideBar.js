@@ -29,7 +29,7 @@ class SideBar extends React.Component {
     }
 
     submitPlate() {
-        console.log("submitting plate: " + this.state.plate);
+        this.state.apiInstance.reservePlate(this.state.plate);
     }
 
     render() {
