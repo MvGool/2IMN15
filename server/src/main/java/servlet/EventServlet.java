@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.californium.core.network.Endpoint;
+import org.eclipse.jetty.servlets.EventSource;
 import org.eclipse.jetty.servlets.EventSource.Emitter;
 import org.eclipse.leshan.core.node.LwM2mNode;
 import org.eclipse.leshan.core.observation.CompositeObservation;
@@ -31,14 +32,12 @@ import org.eclipse.leshan.core.observation.Observation;
 import org.eclipse.leshan.core.observation.SingleObservation;
 import org.eclipse.leshan.core.response.ObserveCompositeResponse;
 import org.eclipse.leshan.core.response.ObserveResponse;
-import org.eclipse.leshan.server.californium.impl.LeshanServer;
+import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.demo.servlet.json.LwM2mNodeSerializer;
 import org.eclipse.leshan.server.demo.servlet.json.RegistrationSerializer;
 import org.eclipse.leshan.server.demo.servlet.log.CoapMessage;
 import org.eclipse.leshan.server.demo.servlet.log.CoapMessageListener;
 import org.eclipse.leshan.server.demo.servlet.log.CoapMessageTracer;
-import org.eclipse.leshan.server.demo.utils.EventSource;
-import org.eclipse.leshan.server.demo.utils.EventSourceServlet;
 import org.eclipse.leshan.server.observation.ObservationListener;
 import org.eclipse.leshan.server.queue.PresenceListener;
 import org.eclipse.leshan.server.registration.Registration;
@@ -50,7 +49,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class EventServlet extends EventSourceServlet {
+public class EventServlet extends org.eclipse.jetty.servlets.EventSourceServlet {
 
     private static final String EVENT_DEREGISTRATION = "DEREGISTRATION";
 
@@ -124,18 +123,18 @@ public class EventServlet extends EventSourceServlet {
 
         @Override
         public void cancelled(Observation observation) {
+        	System.out.println("Cancelled observation: " + observation.toString());
         }
-
         @Override
         public void onResponse(Observation observation, Registration registration, ObserveResponse response) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Received notification from [{}] containing value [{}]", observation.getPath(),
+                LOG.debug("Received notification from [{}] containing value [{}]", ((SingleObservation) observation).getPath(),
                         response.getContent().toString());
             }
 
             if (registration != null) {
                 String data = new StringBuilder("{\"ep\":\"").append(registration.getEndpoint()).append("\",\"res\":\"")
-                        .append(observation.getPath().toString()).append("\",\"val\":")
+                        .append(((SingleObservation) observation).getPath().toString()).append("\",\"val\":")
                         .append(gson.toJson(response.getContent())).append("}").toString();
 
                 sendEvent(EVENT_NOTIFICATION, data, registration.getEndpoint());
@@ -146,7 +145,7 @@ public class EventServlet extends EventSourceServlet {
         public void onError(Observation observation, Registration registration, Exception error) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn(String.format("Unable to handle notification of [%s:%s]", observation.getRegistrationId(),
-                        observation.getPath()), error);
+                        ((SingleObservation) observation).getPath()), error);
             }
         }
 
@@ -166,6 +165,7 @@ public class EventServlet extends EventSourceServlet {
 			// TODO Auto-generated method stub
 			
 		}
+
     };
 
     public EventServlet(LeshanServer server, int securePort) {
