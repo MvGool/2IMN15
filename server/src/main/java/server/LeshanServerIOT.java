@@ -10,6 +10,9 @@ import org.eclipse.leshan.server.registration.Registration;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
@@ -17,7 +20,6 @@ import java.util.List;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
-import javax.servlet.http.HttpServlet;
 
 import org.eclipse.californium.core.config.CoapConfig;
 import org.eclipse.californium.elements.config.Configuration;
@@ -28,32 +30,18 @@ import org.eclipse.californium.scandium.config.DtlsConnectorConfig;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.eclipse.leshan.core.demo.LwM2mDemoConstant;
 import org.eclipse.leshan.core.demo.cli.ShortErrorMessageHandler;
 import org.eclipse.leshan.core.model.ObjectLoader;
 import org.eclipse.leshan.core.model.ObjectModel;
-import org.eclipse.leshan.core.node.LwM2mResource;
-import org.eclipse.leshan.core.observation.CompositeObservation;
-import org.eclipse.leshan.core.observation.Observation;
-import org.eclipse.leshan.core.observation.SingleObservation;
-import org.eclipse.leshan.core.request.ReadRequest;
-import org.eclipse.leshan.core.response.ObserveCompositeResponse;
-import org.eclipse.leshan.core.response.ObserveResponse;
-import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.californium.LeshanServerBuilder;
 import org.eclipse.leshan.server.demo.cli.LeshanServerDemoCLI;
-import org.eclipse.leshan.server.demo.servlet.ClientServlet;
 import org.eclipse.leshan.server.demo.servlet.EventServlet;
-import org.eclipse.leshan.server.demo.servlet.ObjectSpecServlet;
-import org.eclipse.leshan.server.demo.servlet.SecurityServlet;
-import org.eclipse.leshan.server.demo.servlet.ServerServlet;
 import org.eclipse.leshan.server.model.LwM2mModelProvider;
 import org.eclipse.leshan.server.model.VersionedModelProvider;
 import org.eclipse.leshan.server.observation.ObservationListener;
 import org.eclipse.leshan.server.redis.RedisRegistrationStore;
 import org.eclipse.leshan.server.redis.RedisSecurityStore;
-import org.eclipse.leshan.server.registration.Registration;
 import org.eclipse.leshan.server.registration.RegistrationListener;
 import org.eclipse.leshan.server.registration.RegistrationUpdate;
 import org.eclipse.leshan.server.security.EditableSecurityStore;
@@ -209,7 +197,40 @@ public class LeshanServerIOT {
 		Server server = new Server(jettyAddr);
 		WebAppContext root = new WebAppContext();
 		root.setContextPath("/");
-		root.setResourceBase(LeshanServerIOT.class.getClassLoader().getResource("webapp").toExternalForm());
+		URL f = LeshanServerIOT.class.getClassLoader().getResource("static/index.html");
+        if (f == null)
+        {
+            throw new RuntimeException("Unable to find resource directory");
+        }
+
+        // Resolve file to directory
+        URI webRootUri = URI.create("");
+		try {
+			webRootUri = f.toURI().resolve("./").normalize();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+        System.err.println("WebRoot is " + webRootUri);
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("-----------");
+
+//		root.setBaseResource(webRootUri);
 		root.setParentLoaderPriority(true);
 		server.setHandler(root); 
 		

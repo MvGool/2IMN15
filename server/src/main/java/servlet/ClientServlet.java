@@ -29,8 +29,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import picocli.CommandLine;
+import server.LeshanServerIOT;
 
-public class LeshanServerIOT {
+public class ClientServlet {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(LeshanServerIOT.class);
 	private static final String CF_CONFIGURATION_FILENAME = "Californium.properties";
