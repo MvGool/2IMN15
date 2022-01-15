@@ -1,6 +1,12 @@
 package server;
 
 import java.io.File;
+import org.eclipse.leshan.core.observation.CompositeObservation;
+import org.eclipse.leshan.core.observation.Observation;
+import org.eclipse.leshan.core.observation.SingleObservation;
+import org.eclipse.leshan.core.response.ObserveCompositeResponse;
+import org.eclipse.leshan.core.response.ObserveResponse;
+import org.eclipse.leshan.server.registration.Registration;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -27,8 +33,12 @@ import org.eclipse.leshan.core.demo.cli.ShortErrorMessageHandler;
 import org.eclipse.leshan.core.model.ObjectLoader;
 import org.eclipse.leshan.core.model.ObjectModel;
 import org.eclipse.leshan.core.node.LwM2mResource;
+import org.eclipse.leshan.core.observation.CompositeObservation;
 import org.eclipse.leshan.core.observation.Observation;
+import org.eclipse.leshan.core.observation.SingleObservation;
 import org.eclipse.leshan.core.request.ReadRequest;
+import org.eclipse.leshan.core.response.ObserveCompositeResponse;
+import org.eclipse.leshan.core.response.ObserveResponse;
 import org.eclipse.leshan.core.response.ReadResponse;
 import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.californium.LeshanServerBuilder;
@@ -40,6 +50,7 @@ import org.eclipse.leshan.server.demo.servlet.SecurityServlet;
 import org.eclipse.leshan.server.demo.servlet.ServerServlet;
 import org.eclipse.leshan.server.model.LwM2mModelProvider;
 import org.eclipse.leshan.server.model.VersionedModelProvider;
+import org.eclipse.leshan.server.observation.ObservationListener;
 import org.eclipse.leshan.server.redis.RedisRegistrationStore;
 import org.eclipse.leshan.server.redis.RedisSecurityStore;
 import org.eclipse.leshan.server.registration.Registration;
@@ -245,6 +256,39 @@ public class LeshanServerIOT {
 		            Registration newReg) {
 		        System.out.println("device left: " + registration.getEndpoint());
 		    }
+		});
+		
+		
+		server.getObservationService().addListener(new ObservationListener() {
+			public void newObservation(Observation observation, Registration registration) {
+				System.out.println("New observation: " + observation.toString());
+			}
+			
+			@Override
+			public void cancelled(Observation observation) {
+				System.out.println("Cancelled observation: " + observation.toString());
+			
+			}
+			
+			@Override
+			public void onResponse(SingleObservation observation, Registration registration, ObserveResponse response) {
+				System.out.println("Response from observation: " + observation.toString());
+				
+			}
+
+			@Override
+			public void onError(Observation observation, Registration registration, Exception error) {
+				System.out.println("Error from observation: " + observation.toString());
+				
+			}
+
+			@Override
+			public void onResponse(CompositeObservation observation, Registration registration,
+					ObserveCompositeResponse response) {
+				// TODO Auto-generated method stub
+				
+			}
+			
 		});
 	}
 	
