@@ -146,7 +146,7 @@ public class EventServlet extends EventSourceServlet {
 
             sendEvent(EVENT_SLEEPING, data, registration.getEndpoint());
         }
-
+                
         @Override
         public void onAwake(Registration registration) {
             String data = new StringBuilder("{\"ep\":\"").append(registration.getEndpoint()).append("\"}").toString();
