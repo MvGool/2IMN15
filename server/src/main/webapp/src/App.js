@@ -18,14 +18,19 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.update()
+    this.update();
+    this.interval = setInterval(this.update, 10000);
   }
 
-  update() {
-    this.state.apiInstance.update()
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  async update() {
+    await this.state.apiInstance.update();
     this.setState({
       lot: this.state.apiInstance.getParkingLot()
-    })
+    });
   }
 
   render() {

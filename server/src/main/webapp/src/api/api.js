@@ -23,10 +23,29 @@ export default class api {
             updatedLot = responseJson;
         } catch(error) {
             console.error(error);
+            return "error"
         }
         this.width = updatedLot.width
         this.height = updatedLot.height
         this.parkingLot = updatedLot.parkingLot
+
+        return "success"
+    }
+    
+    async reservePlate(plate) {
+        try {
+            let response = await fetch('/api/plate', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(plate)
+            });
+            return response.json();
+        } catch(error) {
+            console.error(error);
+            return "error"
+        }
     }
     
     getParkingLot() {
@@ -51,10 +70,5 @@ export default class api {
     
     getReservations() {
         return this.parkingLot.filter(x => x === "reserved").length
-    }
-
-    reservePlate(plate) {
-        console.log(plate)
-        // TODO post plate to server
     }
 }

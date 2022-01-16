@@ -6,7 +6,6 @@ export default function ParkingLot(props) {
     let length = props.api.getHeight()
     let width = props.api.getWidth()
     let lot = props.api.getParkingLot()
-    console.log(lot)
 
     let parkingLot = []
     let parkingRow = []

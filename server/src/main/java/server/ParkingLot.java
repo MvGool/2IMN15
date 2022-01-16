@@ -46,6 +46,6 @@ public class ParkingLot {
 	
 	public String getJson() {
 		String lotJson = gson.toJson(lot);
-		return "{\"width\": "+width+", \"heigth\": "+height+", \"parkingLot\": "+lotJson+"}";
+		return "{\"width\": "+width+", \"height\": "+height+", \"parkingLot\": "+lotJson+"}";
 	}
 }
