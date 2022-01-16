@@ -8,6 +8,7 @@ class SideBar extends React.Component {
 
         this.state={
             plate: "",
+            error: ""
         }
 
         this.handlePlateChange = this.handlePlateChange.bind(this);
@@ -40,9 +41,22 @@ class SideBar extends React.Component {
             </div>
             <div>
                 <h3>Make a reservation</h3>
+                {this.props.selected!=null?<p>Selected spot: {this.props.selected.id?this.props.selected.id + " at ":null}{"("+this.props.selected.x+", "+this.props.selected.y+")"}</p>:null}
                 <form name="form">
                     License plate: <input type="text" name="plate" value={this.state.plate} onChange={this.handlePlateChange} required />
-                    <input type="button" value="Reserve" onClick={this.submitPlate} />
+                    <input type="button" value="Reserve" onClick={() => {
+                        if (this.props.selected.state == "Free") {
+                            this.setState({
+                                error: ""
+                            });
+                            this.submitPlate();
+                        } else {
+                            this.setState({
+                                error: "This state is not free"
+                            });
+                        }
+                    }} />
+                    {this.state.error}
                 </form>
             </div>
         </div>

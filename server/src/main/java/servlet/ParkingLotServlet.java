@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.leshan.server.californium.LeshanServer;
 
-import server.ParkingLot;
+import components.ParkingLot;
 
 public class ParkingLotServlet extends HttpServlet {
 
@@ -21,7 +21,7 @@ public class ParkingLotServlet extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        ParkingLot parkingLot = new ParkingLot(10, 5);
+        ParkingLot parkingLot = ParkingLot.getParkingLot();
         String parkingLotString = parkingLot.getJson();
 
         PrintWriter out = resp.getWriter();

@@ -4,8 +4,12 @@ import java.io.File;
 import org.eclipse.leshan.core.observation.CompositeObservation;
 import org.eclipse.leshan.core.observation.Observation;
 import org.eclipse.leshan.core.observation.SingleObservation;
+import org.eclipse.leshan.core.request.ReadRequest;
+import org.eclipse.leshan.core.request.WriteRequest;
 import org.eclipse.leshan.core.response.ObserveCompositeResponse;
 import org.eclipse.leshan.core.response.ObserveResponse;
+import org.eclipse.leshan.core.response.ReadResponse;
+import org.eclipse.leshan.core.response.WriteResponse;
 import org.eclipse.leshan.server.registration.Registration;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -31,6 +35,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.leshan.core.demo.cli.ShortErrorMessageHandler;
 import org.eclipse.leshan.core.model.ObjectLoader;
 import org.eclipse.leshan.core.model.ObjectModel;
+import org.eclipse.leshan.core.node.LwM2mResource;
 import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.californium.LeshanServerBuilder;
 import org.eclipse.leshan.server.demo.cli.LeshanServerDemoCLI;
@@ -48,6 +53,7 @@ import org.slf4j.LoggerFactory;
 
 import picocli.CommandLine;
 import servlet.EventServlet;
+import servlet.LicensePlateServlet;
 import servlet.ParkingLotServlet;
 
 public class LeshanServerIOT {
@@ -201,26 +207,19 @@ public class LeshanServerIOT {
 		root.setResourceBase(LeshanServerIOT.class.getClassLoader().getResource("static").toExternalForm());
 		root.setParentLoaderPriority(true);
 		server.setHandler(root); 
-		
-		try {
-			System.out.println(LeshanServerIOT.class
-			            .getProtectionDomain()
-			            .getCodeSource()
-			            .getLocation()
-			            .toURI()
-			            .getPath());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 		// Create Servlet
 		ParkingLotServlet parkingServlet = new ParkingLotServlet(lwServer);
 		ServletHolder parkingServletHolder = new ServletHolder(parkingServlet);
 		root.addServlet(parkingServletHolder, "/api/lot/*");
-		
-		EventServlet eventServlet = new EventServlet(lwServer, lwServer.getSecuredAddress().getPort());
-		ServletHolder eventServletHolder = new ServletHolder(eventServlet);
-		root.addServlet(eventServletHolder, "/api/event/*");
+
+		LicensePlateServlet plateServlet = new LicensePlateServlet();
+		ServletHolder plateServletHolder = new ServletHolder(plateServlet);
+		root.addServlet(plateServletHolder, "/api/plate/*");
+
+//		EventServlet eventServlet = new EventServlet(lwServer, lwServer.getSecuredAddress().getPort());
+//		ServletHolder eventServletHolder = new ServletHolder(eventServlet);
+//		root.addServlet(eventServletHolder, "/api/event/*");
 		/*ServletHolder clientServletHolder = new ServletHolder(new ClientServlet(lwServer));
 		root.addServlet(clientServletHolder, "/api/clients/*");
 		ServletHolder securityServletHolder;
@@ -249,11 +248,31 @@ public class LeshanServerIOT {
 		server.getRegistrationService().addListener(new RegistrationListener() {
 		    public void registered(Registration registration, Registration previousReg,
 		            Collection<Observation> previousObsersations) {
-		    	System.out.println("new device: " + registration.getEndpoint());
+		    	System.err.println("new device: " + registration);
+		    	try {
+		            ReadResponse response = server.send(registration, new ReadRequest(32800,0,32700));
+		            if (response.isSuccess()) {
+		                System.out.println("Spot id: " + ((LwM2mResource)response.getContent()).getValue());
+		            }else {
+		                System.out.println("Failed to read:" + response.getCode() + " " + response.getErrorMessage());
+		            }
+		        } catch (InterruptedException e) {
+		            e.printStackTrace();
+		        }
+		    	try {
+		            WriteResponse response = server.send(registration, new WriteRequest(32800,0,32706,"P1"));
+		            if (response.isSuccess()) {
+		                System.out.println("Updated parking lot name");
+		            }else {
+		                System.out.println("Failed to read:" + response.getCode() + " " + response.getErrorMessage());
+		            }
+		        } catch (InterruptedException e) {
+		            e.printStackTrace();
+		        }
 			}
 
 		    public void updated(RegistrationUpdate update, Registration updatedReg, Registration previousReg) {
-		        System.out.println("device is still here: " + updatedReg.getEndpoint());
+		        System.err.println("device is still here: " + updatedReg.getEndpoint());
 		    }
 
 		    public void unregistered(Registration registration, Collection<Observation> observations, boolean expired,
@@ -262,8 +281,8 @@ public class LeshanServerIOT {
 		    }
 		});
 		
-		
 		server.getObservationService().addListener(new ObservationListener() {
+			@Override
 			public void newObservation(Observation observation, Registration registration) {
 				System.out.println("New observation: " + observation.toString());
 			}
@@ -289,8 +308,7 @@ public class LeshanServerIOT {
 			@Override
 			public void onResponse(CompositeObservation observation, Registration registration,
 					ObserveCompositeResponse response) {
-				// TODO Auto-generated method stub
-				
+				System.out.println("Response from observation: " + observation.toString());				
 			}
 			
 		});

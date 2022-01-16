@@ -4,7 +4,7 @@ export default class api {
 
     width = 0
     height = 0
-    parkingLot = ["free", "free", "occupied", "free", "reserved"]
+    parkingLot = []
 
     static getInstance() {
         if (this.instance == null) {
@@ -61,14 +61,14 @@ export default class api {
     }
     
     getFree() {
-        return this.parkingLot.filter(x => x === "free").length
+        return this.parkingLot.filter(x => x.state === "Free").length
     }
     
     getOccupied() {
-        return this.parkingLot.filter(x => x === "occupied").length
+        return this.parkingLot.filter(x => x.state === "Occupied").length
     }
     
     getReservations() {
-        return this.parkingLot.filter(x => x === "reserved").length
+        return this.parkingLot.filter(x => x.state === "Reserved").length
     }
 }

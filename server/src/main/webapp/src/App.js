@@ -11,10 +11,12 @@ class App extends React.Component {
 
     this.state = {
       apiInstance: api.getInstance(),
-      lot: []
+      lot: [],
+      selectedSpot: null
     }
 
     this.update = this.update.bind(this)
+    this.spotSelected = this.spotSelected.bind(this);
   }
 
   componentDidMount() {
@@ -33,14 +35,20 @@ class App extends React.Component {
     });
   }
 
+  spotSelected(spot) {
+    this.setState({
+      selectedSpot: spot
+    })
+  }
+
   render() {
     return (
       <div className="App">
         <div className='sidebar'>
-          <SideBar api={this.state.apiInstance} update={this.update} />
+          <SideBar api={this.state.apiInstance} update={this.update} selected={this.state.selectedSpot} />
         </div>
         <div className='main'>
-          <ParkingLot api={this.state.apiInstance} />
+          <ParkingLot api={this.state.apiInstance} selected={this.state.selectedSpot} spotSelected={this.spotSelected} />
         </div>
       </div>
     );

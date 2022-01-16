@@ -23,7 +23,7 @@ export default function ParkingLot(props) {
             {parkingLot.map(row => 
                 <div className="parking-row">
                     {row.map(spot => 
-                        <ParkingSpot spot={spot} />
+                        <ParkingSpot spot={spot} selected={props.selected==spot} spotSelected={props.spotSelected} />
                     )}
                 </div>
             )}
