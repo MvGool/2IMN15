@@ -280,37 +280,6 @@ public class LeshanServerIOT {
 		});
 		
 		
-		server.getObservationService().addListener(new ObservationListener() {
-			public void newObservation(Observation observation, Registration registration) {
-				System.out.println("New observation: " + observation.toString());
-			}
-			
-			@Override
-			public void cancelled(Observation observation) {
-				System.out.println("Cancelled observation: " + observation.toString());
-			
-			}
-			
-			@Override
-			public void onResponse(SingleObservation observation, Registration registration, ObserveResponse response) {
-				System.out.println("Response from observation: " + observation.toString());
-				
-			}
-
-			@Override
-			public void onError(Observation observation, Registration registration, Exception error) {
-				System.out.println("Error from observation: " + observation.toString());
-				
-			}
-
-			@Override
-			public void onResponse(CompositeObservation observation, Registration registration,
-					ObserveCompositeResponse response) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
 	}
 	
 }
