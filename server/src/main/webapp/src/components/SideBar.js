@@ -8,15 +8,10 @@ class SideBar extends React.Component {
 
         this.state={
             plate: "",
-            apiInstance: api.getInstance()
         }
 
         this.handlePlateChange = this.handlePlateChange.bind(this);
         this.submitPlate = this.submitPlate.bind(this);
-    }
-
-    componentDidMount() {
-        this.state.apiInstance.update();
     }
 
     handlePlateChange(event) {
@@ -29,7 +24,7 @@ class SideBar extends React.Component {
     }
 
     submitPlate() {
-        this.state.apiInstance.reservePlate(this.state.plate);
+        this.props.api.reservePlate(this.state.plate);
     }
 
     render() {
@@ -37,11 +32,11 @@ class SideBar extends React.Component {
             <div>
                 <h3>Current parkinglot status</h3>
                 <p>
-                    Free spaces: {this.state.apiInstance.getFree()}<br/>
-                    Occupied spaces: {this.state.apiInstance.getOccupied()}<br/>
-                    Reserved spaces: {this.state.apiInstance.getReservations()}
+                    Free spaces: {this.props.api.getFree()}<br/>
+                    Occupied spaces: {this.props.api.getOccupied()}<br/>
+                    Reserved spaces: {this.props.api.getReservations()}
                 </p>
-                <input type="button" value="Refresh" onClick={() => {this.state.apiInstance.update(); this.props.update()}} />
+                <input type="button" value="Refresh" onClick={() => {this.props.update()}} />
             </div>
             <div>
                 <h3>Make a reservation</h3>

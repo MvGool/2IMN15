@@ -16,7 +16,7 @@ public class ParkingLot {
 		width = w;
 		height = h;
 		lot = new String[w * h];
-		Arrays.setAll(lot, (index) -> index + "free");
+		Arrays.setAll(lot, (index) -> "free");
 	}
 	
 	public void setLot(String[] newLot) {
@@ -45,6 +45,7 @@ public class ParkingLot {
 	}
 	
 	public String getJson() {
-		return gson.toJson(lot);
+		String lotJson = gson.toJson(lot);
+		return "{\"width\": "+width+", \"heigth\": "+height+", \"parkingLot\": "+lotJson+"}";
 	}
 }

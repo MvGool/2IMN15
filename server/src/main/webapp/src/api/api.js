@@ -2,7 +2,8 @@ export default class api {
 
     instance = null
 
-    // parkingLot = []
+    width = 0
+    height = 0
     parkingLot = ["free", "free", "occupied", "free", "reserved"]
 
     static getInstance() {
@@ -13,13 +14,31 @@ export default class api {
         return this.instance
     }
 
-    update() {
-        // TODO get updated values from server
-        this.parkingLot.push("free")
+    async update() {
+        let updatedLot = null
+        try {
+            let response = await fetch('/api/lot');
+            let responseJson = await response.json();
+            console.log(responseJson)
+            updatedLot = responseJson;
+        } catch(error) {
+            console.error(error);
+        }
+        this.width = updatedLot.width
+        this.height = updatedLot.height
+        this.parkingLot = updatedLot.parkingLot
     }
     
     getParkingLot() {
         return this.parkingLot
+    }
+
+    getWidth() {
+        return this.width
+    }
+
+    getHeight() {
+        return this.height
     }
     
     getFree() {
