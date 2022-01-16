@@ -126,7 +126,7 @@ public class EventServlet extends org.eclipse.jetty.servlets.EventSourceServlet 
         	System.out.println("Cancelled observation: " + observation.toString());
         }
         @Override
-        public void onResponse(Observation observation, Registration registration, ObserveResponse response) {
+        public void onResponse(SingleObservation observation, Registration registration, ObserveResponse response) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Received notification from [{}] containing value [{}]", ((SingleObservation) observation).getPath(),
                         response.getContent().toString());
@@ -152,12 +152,6 @@ public class EventServlet extends org.eclipse.jetty.servlets.EventSourceServlet 
         @Override
         public void newObservation(Observation observation, Registration registration) {
         }
-
-		@Override
-		public void onResponse(SingleObservation observation, Registration registration, ObserveResponse response) {
-			// TODO Auto-generated method stub
-			
-		}
 
 		@Override
 		public void onResponse(CompositeObservation observation, Registration registration,

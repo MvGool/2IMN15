@@ -10,9 +10,7 @@ import org.eclipse.leshan.server.registration.Registration;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
@@ -36,7 +34,6 @@ import org.eclipse.leshan.core.model.ObjectModel;
 import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.californium.LeshanServerBuilder;
 import org.eclipse.leshan.server.demo.cli.LeshanServerDemoCLI;
-import org.eclipse.leshan.server.demo.servlet.EventServlet;
 import org.eclipse.leshan.server.model.LwM2mModelProvider;
 import org.eclipse.leshan.server.model.VersionedModelProvider;
 import org.eclipse.leshan.server.observation.ObservationListener;
@@ -50,6 +47,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import picocli.CommandLine;
+import servlet.EventServlet;
+import servlet.ParkingLotServlet;
 
 public class LeshanServerIOT {
 	
@@ -195,46 +194,30 @@ public class LeshanServerIOT {
 			jettyAddr = new InetSocketAddress(cli.main.webhost, cli.main.webPort);
 		}
 		Server server = new Server(jettyAddr);
+		
+		// Set context
 		WebAppContext root = new WebAppContext();
 		root.setContextPath("/");
-		URL f = LeshanServerIOT.class.getClassLoader().getResource("static/index.html");
-        if (f == null)
-        {
-            throw new RuntimeException("Unable to find resource directory");
-        }
-
-        // Resolve file to directory
-        URI webRootUri = URI.create("");
+		root.setResourceBase(LeshanServerIOT.class.getClassLoader().getResource("static").toExternalForm());
+		root.setParentLoaderPriority(true);
+		server.setHandler(root); 
+		
 		try {
-			webRootUri = f.toURI().resolve("./").normalize();
+			System.out.println(LeshanServerIOT.class
+			            .getProtectionDomain()
+			            .getCodeSource()
+			            .getLocation()
+			            .toURI()
+			            .getPath());
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-        System.err.println("WebRoot is " + webRootUri);
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("-----------");
-
-//		root.setBaseResource(webRootUri);
-		root.setParentLoaderPriority(true);
-		server.setHandler(root); 
-		
 		// Create Servlet
+		ParkingLotServlet parkingServlet = new ParkingLotServlet(lwServer);
+		ServletHolder parkingServletHolder = new ServletHolder(parkingServlet);
+		root.addServlet(parkingServletHolder, "/api/lot/*");
+		
 		EventServlet eventServlet = new EventServlet(lwServer, lwServer.getSecuredAddress().getPort());
 		ServletHolder eventServletHolder = new ServletHolder(eventServlet);
 		root.addServlet(eventServletHolder, "/api/event/*");
@@ -280,6 +263,37 @@ public class LeshanServerIOT {
 		});
 		
 		
+		server.getObservationService().addListener(new ObservationListener() {
+			public void newObservation(Observation observation, Registration registration) {
+				System.out.println("New observation: " + observation.toString());
+			}
+			
+			@Override
+			public void cancelled(Observation observation) {
+				System.out.println("Cancelled observation: " + observation.toString());
+			
+			}
+			
+			@Override
+			public void onResponse(SingleObservation observation, Registration registration, ObserveResponse response) {
+				System.out.println("Response from observation: " + observation.toString());
+				
+			}
+
+			@Override
+			public void onError(Observation observation, Registration registration, Exception error) {
+				System.out.println("Error from observation: " + observation.toString());
+				
+			}
+
+			@Override
+			public void onResponse(CompositeObservation observation, Registration registration,
+					ObserveCompositeResponse response) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 	}
 	
 }
