@@ -4,6 +4,7 @@ import java.io.File;
 import org.eclipse.leshan.core.observation.CompositeObservation;
 import org.eclipse.leshan.core.observation.Observation;
 import org.eclipse.leshan.core.observation.SingleObservation;
+import org.eclipse.leshan.core.request.ObserveRequest;
 import org.eclipse.leshan.core.request.ReadRequest;
 import org.eclipse.leshan.core.request.WriteRequest;
 import org.eclipse.leshan.core.response.ObserveCompositeResponse;
@@ -35,6 +36,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.leshan.core.demo.cli.ShortErrorMessageHandler;
 import org.eclipse.leshan.core.model.ObjectLoader;
 import org.eclipse.leshan.core.model.ObjectModel;
+import org.eclipse.leshan.core.node.LwM2mNode;
 import org.eclipse.leshan.core.node.LwM2mResource;
 import org.eclipse.leshan.server.californium.LeshanServer;
 import org.eclipse.leshan.server.californium.LeshanServerBuilder;
@@ -245,6 +247,9 @@ public class LeshanServerIOT {
 	}
 		
 	public static void registerEventListeners(LeshanServer server) {
+		ObserveRequest licensePlateRequest = new ObserveRequest(32801/0/32704);
+		server.send(registration, licensePlateRequest, 500000);
+		
 		server.getRegistrationService().addListener(new RegistrationListener() {
 		    public void registered(Registration registration, Registration previousReg,
 		            Collection<Observation> previousObsersations) {
@@ -295,6 +300,7 @@ public class LeshanServerIOT {
 			
 			@Override
 			public void onResponse(SingleObservation observation, Registration registration, ObserveResponse response) {
+				LwM2mNode resp = response.getContent();
 				System.out.println("Response from observation: " + observation.toString());
 				
 			}
