@@ -25,7 +25,18 @@ class SideBar extends React.Component {
     }
 
     submitPlate() {
-        this.props.api.reservePlate(this.state.plate);
+        if (this.props.selected.state == "Free") {
+            this.setState({
+                error: ""
+            });
+            this.props.api.reservePlate(this.state.plate, this.props.selected.x, this.props.selected.y);
+            setTimeout(this.props.update, 500);
+        } else {
+            this.setState({
+                error: "This state is not free"
+            });
+        }
+        
     }
 
     render() {
@@ -42,22 +53,12 @@ class SideBar extends React.Component {
             <div>
                 <h3>Make a reservation</h3>
                 {this.props.selected!=null?<p>Selected spot: {this.props.selected.id?this.props.selected.id + " at ":null}{"("+this.props.selected.x+", "+this.props.selected.y+")"}</p>:null}
-                <form name="form">
-                    License plate: <input type="text" name="plate" value={this.state.plate} onChange={this.handlePlateChange} required />
-                    <input type="button" value="Reserve" onClick={() => {
-                        if (this.props.selected.state == "Free") {
-                            this.setState({
-                                error: ""
-                            });
-                            this.submitPlate();
-                        } else {
-                            this.setState({
-                                error: "This state is not free"
-                            });
-                        }
-                    }} />
-                    {this.state.error}
-                </form>
+                {this.props.selected!=null && this.props.selected.licensePlate?<p>Plate on this spot: {this.props.selected.licensePlate}</p>:null}
+                <br/>
+                License plate: 
+                <input type="text" name="plate" value={this.state.plate} onChange={this.handlePlateChange} onKeyPress={(event) => {if (event.key == 'Enter') {this.submitPlate()}}} required />
+                <input type="submit" value="Reserve" onClick={this.submitPlate} />
+                <p>{this.state.error}</p>
             </div>
         </div>
     };

@@ -34,6 +34,6 @@ public class ParkingSpot {
 	}
 	
 	public void setPlate(String plate) {
-		this.licensePlate = "";
+		this.licensePlate = plate;
 	}
 }

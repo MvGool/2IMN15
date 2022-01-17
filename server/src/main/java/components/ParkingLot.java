@@ -35,6 +35,15 @@ public class ParkingLot {
 		spot.setId(id);
 	}
 	
+	public void reserve(String plate, String spotLocation) {
+		int x = Integer.parseInt(spotLocation.substring(0,spotLocation.indexOf(",")));
+		int y = Integer.parseInt(spotLocation.substring(spotLocation.indexOf(",")+1));
+		
+		ParkingSpot spot = getSpot(x,y);
+		spot.setState("Reserved");
+		spot.setPlate(plate);
+	}
+	
 	public void vehicleArrival(String plate) {
 		Boolean placed = false;
 		for (ParkingSpot spot : lot) {

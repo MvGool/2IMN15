@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import components.ParkingLot;
+
 public class LicensePlateServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -19,15 +21,12 @@ public class LicensePlateServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		BufferedReader reader = req.getReader();
-		StringBuilder sb = new StringBuilder();
-	    String line = reader.readLine();
-	    while (line != null) {
-	      sb.append(line + "\n");
-	      line = reader.readLine();
-	    }
-	    reader.close();
-	    String params = sb.toString();
-        System.err.println(params);
+	    String plate = reader.readLine();
+	    String spot = reader.readLine();
+        System.err.println("Plate: "+plate);
+        System.err.println("Spot: "+spot);
+        
+        ParkingLot.getParkingLot().reserve(plate, spot);
         
         PrintWriter out = resp.getWriter();
         resp.setContentType("application/json");

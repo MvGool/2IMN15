@@ -32,14 +32,14 @@ export default class api {
         return "success"
     }
     
-    async reservePlate(plate) {
+    async reservePlate(plate, x, y) {
         try {
             let response = await fetch('/api/plate', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(plate)
+                body: plate + "\n" + x + "," + y
             });
             return response.json();
         } catch(error) {
