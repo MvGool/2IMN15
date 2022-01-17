@@ -1,38 +1,44 @@
 package components;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+
+import org.eclipse.leshan.server.registration.Registration;
 
 import com.google.gson.Gson;
 
 public class ParkingLot {
-
-	private static ParkingLot parkingLot;
 	
+	private final String name;
 	private final int width;
 	private final int height;
+	private ArrayList<String> ids = new ArrayList<>();
+	private ArrayList<String> reserved = new ArrayList<>();
 	private ParkingSpot[] lot;
 	
 	private int filled = 0;
 	
 	private Gson gson = new Gson();
 	
-	private ParkingLot() {
+	public ParkingLot(String name) {
+		this.name = name;
 		width = 8;
 		height = 8;
 		lot = new ParkingSpot[width * height];
 		Arrays.setAll(lot, (index) -> new ParkingSpot(index % width, (int) Math.floor(index/width)));
 	}
-	
-	public static ParkingLot getParkingLot() {
-		if (parkingLot == null) {
-			parkingLot = new ParkingLot();
-		}
-		return parkingLot;
-	}
 		
-	public void registerSpot(String id) {
-		ParkingSpot spot = lot[filled+1];
-		spot.setId(id);
+	public void registerSpot(String id, Registration registration) {
+		if (!ids.contains(id)) {
+			ids.add(id);
+			ParkingSpot spot = lot[filled++];
+			spot.setId(id);
+			spot.setRegistration(registration);
+		}
+	}
+	
+	public void reserve(String plate) {
+		reserved.add(plate);
 	}
 	
 	public void reserve(String plate, String spotLocation) {
@@ -44,36 +50,48 @@ public class ParkingLot {
 		spot.setPlate(plate);
 	}
 	
-	public void vehicleArrival(String plate) {
+	public ParkingSpot vehicleArrival(String plate) {
+		ParkingSpot updatedSpot = null;
 		Boolean placed = false;
 		for (ParkingSpot spot : lot) {
-			if (spot.getPlate() == plate && spot.getState() == "Reserved") {
+			if (spot.getPlate().equals(plate) && spot.getState().equals("Reserved")) {
 				spot.setState("Occupied");
 				placed = true;
+				updatedSpot = spot;
+				break;
 			} 
 		}
 		if (!placed) {
 			for (ParkingSpot spot : lot) {
-				if (spot.getState() == "Free") {
+				if (spot.getState().equals("Free")) {
 					spot.setState("Occupied");
 					spot.setPlate(plate);
+					reserved.remove(plate);
+					updatedSpot = spot;
+					break;
 				}
 			}
 		}
+		
+		return updatedSpot;
 	}
 
-	public void vehicleExit(String plate) {
+	public ParkingSpot vehicleExit(String plate) {
 		for (ParkingSpot spot : lot) {
-			if (spot.getPlate() == plate && spot.getState() == "Occupied") {
+			if (spot.getPlate().equals(plate) && spot.getState().equals("Occupied")) {
 				spot.setState("Free");
 				spot.setPlate("");
+				return spot;
 			}
 		}
+		return null;
 	}
 
 	public void setSpotState(String spotId, String state) {
+		System.err.println(spotId + " " + state);
 		for (ParkingSpot spot : lot) {
-			if (spot.getId() == spotId) {
+			if (spot.getId().equals(spotId)) {
+				System.err.println(spot.getId());
 				spot.setState(state);
 			}
 		}
@@ -87,6 +105,10 @@ public class ParkingLot {
 		return lot[y*width + x];
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public int getWidth() {
 		return width;
 	}
@@ -95,9 +117,9 @@ public class ParkingLot {
 		return height;
 	}
 	
-	// TODO
 	public String getJson() {
 		String lotJson = gson.toJson(lot);
-		return "{\"width\": "+width+", \"height\": "+height+", \"parkingLot\": "+lotJson+"}";
+		String reservedJson = gson.toJson(reserved);
+		return "{\"width\": "+width+", \"height\": "+height+", \"parkingLot\": "+lotJson+", \"reserved\": "+reservedJson+"}";
 	}
 }

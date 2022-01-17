@@ -16,6 +16,7 @@ class App extends React.Component {
     }
 
     this.update = this.update.bind(this)
+    this.resetSelected = this.resetSelected.bind(this)
     this.spotSelected = this.spotSelected.bind(this);
   }
 
@@ -35,7 +36,16 @@ class App extends React.Component {
     });
   }
 
+  resetSelected() {
+    this.setState({
+      selectedSpot: null
+    });
+  }
+
   spotSelected(spot) {
+    if (this.state.selectedSpot == spot) {
+      spot = null
+    }
     this.setState({
       selectedSpot: spot
     })
@@ -45,7 +55,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <div className='sidebar'>
-          <SideBar api={this.state.apiInstance} update={this.update} selected={this.state.selectedSpot} />
+          <SideBar api={this.state.apiInstance} update={this.update} selected={this.state.selectedSpot} resetSelected={this.resetSelected} />
         </div>
         <div className='main'>
           <ParkingLot api={this.state.apiInstance} selected={this.state.selectedSpot} spotSelected={this.spotSelected} />

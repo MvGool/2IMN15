@@ -53,6 +53,7 @@ import org.eclipse.leshan.server.security.FileSecurityStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import components.ParkingLot;
 import picocli.CommandLine;
 import servlet.EventServlet;
 import servlet.LicensePlateServlet;
@@ -99,7 +100,7 @@ public class LeshanServerIOT {
 			lwm2mServer.start();
 			webServer.start();
 			LOG.info("Web server started at {}.", webServer.getURI());
-			registerEventListeners(lwm2mServer);
+//			registerEventListeners(lwm2mServer);
 		} catch (Exception e) { 
 			// Handler Execution Error
 			PrintWriter printer = command.getErr();
@@ -211,38 +212,16 @@ public class LeshanServerIOT {
 		server.setHandler(root); 
 
 		// Create Servlet
-		ParkingLotServlet parkingServlet = new ParkingLotServlet(lwServer);
+		ParkingLot lot = new ParkingLot("P1");
+		
+		ParkingLotServlet parkingServlet = new ParkingLotServlet(lwServer, lot);
 		ServletHolder parkingServletHolder = new ServletHolder(parkingServlet);
 		root.addServlet(parkingServletHolder, "/api/lot/*");
 
-		LicensePlateServlet plateServlet = new LicensePlateServlet();
+		LicensePlateServlet plateServlet = new LicensePlateServlet(lwServer, lot);
 		ServletHolder plateServletHolder = new ServletHolder(plateServlet);
 		root.addServlet(plateServletHolder, "/api/plate/*");
 
-//		EventServlet eventServlet = new EventServlet(lwServer, lwServer.getSecuredAddress().getPort());
-//		ServletHolder eventServletHolder = new ServletHolder(eventServlet);
-//		root.addServlet(eventServletHolder, "/api/event/*");
-		/*ServletHolder clientServletHolder = new ServletHolder(new ClientServlet(lwServer));
-		root.addServlet(clientServletHolder, "/api/clients/*");
-		ServletHolder securityServletHolder;
-		if (cli.identity.isRPK()) {
-			securityServletHolder = new ServletHolder(new SecurityServlet(
-					(EditableSecurityStore) lwServer.getSecurityStore(), cli.identity.getPublicKey()));
-		} else {
-			securityServletHolder = new ServletHolder(new SecurityServlet(
-					(EditableSecurityStore) lwServer.getSecurityStore(), cli.identity.getCertChain()[0]));
-		}
-		root.addServlet(securityServletHolder, "/api/security/*");
-		ServletHolder serverServletHolder;
-		if (cli.identity.isRPK()) {
-			serverServletHolder = new ServletHolder(new ServerServlet(lwServer, cli.identity.getPublicKey()));
-		} else {
-			serverServletHolder = new ServletHolder(new ServerServlet(lwServer, cli.identity.getCertChain()[0]));
-		}
-		root.addServlet(serverServletHolder, "/api/server/*");
-		ServletHolder objectSpecServletHolder = new ServletHolder(
-				new ObjectSpecServlet(lwServer.getModelProvider(), lwServer.getRegistrationService()));
-		root.addServlet(objectSpecServletHolder, "/api/objectspecs/*");*/
 		return server;
 	}
 		

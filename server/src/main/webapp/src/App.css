@@ -40,6 +40,8 @@
 
 .parking-spot {
   display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   height: 80px;
   width: 80px;
@@ -58,4 +60,8 @@
 
 .Reserved {
   background-color: rgb(247, 189, 83);
+}
+
+.selected {
+  border: 2px solid black;
 }

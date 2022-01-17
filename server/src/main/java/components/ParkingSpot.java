@@ -1,10 +1,13 @@
 package components;
 
+import org.eclipse.leshan.server.registration.Registration;
+
 public class ParkingSpot {
 
 	private String id = "";
 	private String state = "Free";
 	private String licensePlate = "";
+	private Registration registration;
 	private int x;
 	private int y;
 	
@@ -27,6 +30,7 @@ public class ParkingSpot {
 	
 	public void setState(String state) {
 		this.state = state;
+		System.err.println("State set");
 	}
 	
 	public String getPlate() {
@@ -35,5 +39,13 @@ public class ParkingSpot {
 	
 	public void setPlate(String plate) {
 		this.licensePlate = plate;
+	}
+	
+	public Registration getRegistration() {
+		return registration;
+	}
+	
+	public void setRegistration(Registration registration) {
+		this.registration = registration;
 	}
 }

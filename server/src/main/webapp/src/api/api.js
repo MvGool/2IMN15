@@ -5,6 +5,7 @@ export default class api {
     width = 0
     height = 0
     parkingLot = []
+    reserved = []
 
     static getInstance() {
         if (this.instance == null) {
@@ -28,18 +29,20 @@ export default class api {
         this.width = updatedLot.width
         this.height = updatedLot.height
         this.parkingLot = updatedLot.parkingLot
+        this.reserved = updatedLot.reserved
 
         return "success"
     }
     
-    async reservePlate(plate, x, y) {
+    async reservePlate(plate, x=null, y=null) {
+        let msg = x!=null?plate + "\n" + x + "," + y:plate
         try {
             let response = await fetch('/api/plate', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: plate + "\n" + x + "," + y
+                body: msg
             });
             return response.json();
         } catch(error) {
@@ -61,7 +64,7 @@ export default class api {
     }
     
     getFree() {
-        return this.parkingLot.filter(x => x.state === "Free").length
+        return this.parkingLot.filter(x => x.state === "Free").length - this.reserved.length
     }
     
     getOccupied() {
@@ -69,6 +72,18 @@ export default class api {
     }
     
     getReservations() {
-        return this.parkingLot.filter(x => x.state === "Reserved").length
+        return this.parkingLot.filter(x => x.state === "Reserved").length + this.reserved.length
+    }
+
+    getReservedSpots() {
+        let out = []
+        this.parkingLot.filter(x => x.state === "Reserved").forEach((s) => {
+            out.push(s.licensePlate + " for spot (" + s.x + "," + s.y + ")")
+        })
+        return out
+    }
+
+    getReservedPlates() {
+        return this.reserved
     }
 }
