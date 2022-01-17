@@ -25,18 +25,21 @@ class SideBar extends React.Component {
     }
 
     submitPlate() {
-        if (this.props.selected.state == "Free") {
+        if (!this.props.selected) {
+            this.setState({
+                error: "Select a parking spot first"
+            });
+        } else if (this.props.selected.state != "Free") {
+            this.setState({
+                error: "This spot is not free"
+            });
+        } else {
             this.setState({
                 error: ""
             });
             this.props.api.reservePlate(this.state.plate, this.props.selected.x, this.props.selected.y);
             setTimeout(this.props.update, 500);
-        } else {
-            this.setState({
-                error: "This state is not free"
-            });
         }
-        
     }
 
     render() {
@@ -57,7 +60,7 @@ class SideBar extends React.Component {
                 <br/>
                 License plate: 
                 <input type="text" name="plate" value={this.state.plate} onChange={this.handlePlateChange} onKeyPress={(event) => {if (event.key == 'Enter') {this.submitPlate()}}} required />
-                <input type="submit" value="Reserve" onClick={this.submitPlate} />
+                <input type="button" value="Reserve" onClick={this.submitPlate} />
                 <p>{this.state.error}</p>
             </div>
         </div>
