@@ -247,13 +247,18 @@ public class LeshanServerIOT {
 	}
 		
 	public static void registerEventListeners(LeshanServer server) {
-		ObserveRequest licensePlateRequest = new ObserveRequest(32801/0/32704);
-		server.send(registration, licensePlateRequest, 500000);
 		
 		server.getRegistrationService().addListener(new RegistrationListener() {
 		    public void registered(Registration registration, Registration previousReg,
 		            Collection<Observation> previousObsersations) {
 		    	System.err.println("new device: " + registration);
+		    	try {
+		    		ObserveRequest licensePlateRequest = new ObserveRequest(32801,0,32704);
+					server.send(registration, licensePlateRequest, 500000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 		    	try {
 		            ReadResponse response = server.send(registration, new ReadRequest(32800,0,32700));
 		            if (response.isSuccess()) {
@@ -301,7 +306,7 @@ public class LeshanServerIOT {
 			@Override
 			public void onResponse(SingleObservation observation, Registration registration, ObserveResponse response) {
 				LwM2mNode resp = response.getContent();
-				System.out.println("Response from observation: " + observation.toString());
+				System.err.println("Response from observation: " + resp);
 				
 			}
 
